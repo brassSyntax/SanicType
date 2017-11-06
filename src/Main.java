@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -6,7 +8,6 @@ public class Main {
     public Main() {
         Race race1 = new Race();
         race1.readFile("debug.txt");
-        System.out.println(race1.length());
 
         raceText.setText(race1.getText());
 
@@ -36,29 +37,36 @@ public class Main {
             }
         });
 
+	    playerInput.addCaretListener(new CaretListener() {
+		    @Override
+		    public void caretUpdate(CaretEvent caretEvent) {
 
-        playerInput.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e);
+			    // using invokeLater because CaretListener or DocumentListener throw mutation in notification exception
+			    // and KeyListener executes before text field is changed
 
-                if (playerInput.isEditable()) {
-                    if (race1.next(playerInput.getText())) {
-                        Counter.increment();
-                        Counter.count(Clock.getSeconds());
-                        playerInput.setText("");
+			    SwingUtilities.invokeLater(new Runnable() {
+				    @Override
+				    public void run()
+				    {
+					    if (playerInput.isEditable()) {
+						    if (race1.next(playerInput.getText())) {
+							    Counter.increment();
+							    Counter.count(Clock.getSeconds());
+							    playerInput.setText("");
 
-                        if (race1.isFinished()) {
-                            Clock.stop();
-                            playerInput.setEditable(false);
-                            playerInput.setText("");
-	                        race1.reset();
-	                        restartButton.requestFocus();
-                        }
-                    }
-                }
-            }
-        });
+							    if (race1.isFinished()) {
+								    Clock.stop();
+								    playerInput.setEditable(false);
+								    playerInput.setText("");
+								    race1.reset();
+								    restartButton.requestFocus();
+							    }
+						    }
+					    }
+				    }
+			    });
+		    }
+	    });
     }
 
     public static void main(String[] args) {
@@ -70,7 +78,8 @@ public class Main {
     }
 
     private JPanel panel1;
-    private JTextPane raceText; // https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
+    private JTextPane raceText; // TODO: add formatting for shown text, race position
+//	https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
     private JTextField playerInput;
     private JButton startButton;
     private JButton restartButton;

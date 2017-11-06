@@ -87,8 +87,6 @@ public class Race {
         {
             this.racePos = checkpoint;
             return true;
-
-            // TODO: fix to work as intended
         }
         else
         {
