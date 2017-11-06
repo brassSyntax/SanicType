@@ -29,5 +29,6 @@ public class WPMCounter extends JLabel{
     public void reset()
     {
         this.wordCount = 0;
+        this.setText("0");
     }
 }

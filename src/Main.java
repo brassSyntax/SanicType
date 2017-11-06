@@ -7,7 +7,7 @@ import java.awt.event.*;
 public class Main {
     public Main() {
         Race race1 = new Race();
-        race1.readFile("debug.txt");
+        race1.readFile("TheDarkKnight.txt");
 
         raceText.setText(race1.getText());
 
@@ -76,6 +76,8 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
     }
+
+//  TODO: add toolbar for picking/adding races
 
     private JPanel panel1;
     private JTextPane raceText; // TODO: add formatting for shown text, race position
