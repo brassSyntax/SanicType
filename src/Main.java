@@ -15,7 +15,8 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 if (!Clock.isRunning()) {
                     Clock.setLastTick(System.currentTimeMillis());
-                    Clock.start();
+	                Counter.reset();
+	                Clock.start();
                     playerInput.setEditable(true);
                     playerInput.requestFocus();
                 }
@@ -27,7 +28,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Clock.restart();
-                race1.reset();
+	            race1.reset();
                 Counter.reset();
                 playerInput.setEditable(false);
                 playerInput.setText("");
@@ -51,7 +52,8 @@ public class Main {
                             Clock.stop();
                             playerInput.setEditable(false);
                             playerInput.setText("");
-                            restartButton.requestFocus();
+	                        race1.reset();
+	                        restartButton.requestFocus();
                         }
                     }
                 }

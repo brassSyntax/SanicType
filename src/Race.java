@@ -72,7 +72,7 @@ public class Race {
         }
         else
         {
-            checkpoint = this.raceLength - 2;
+            checkpoint = this.raceLength - 1;
             substr = this.raceText.substring(racePos);
         }
 
