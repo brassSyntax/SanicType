@@ -10,13 +10,14 @@ public class Race {
 
     public Race() {
         this.finished = false;
-        this.raceText = null;
+        this.setRaceText(null);
         this.raceLength = 0;
         this.racePos = 0;
     }
 
     public Race(String text) {
-        this.raceText = text;
+        this.finished = false;
+        this.setRaceText(text);
         this.raceLength = text.length();
         this.racePos = 0;
     }
@@ -26,8 +27,13 @@ public class Race {
         return this.finished;
     }
 
-    public String getText() {
+    public String getRaceText() {
         return this.raceText;
+    }
+
+    public void setRaceText(String raceText) {
+        this.raceText = raceText;
+        this.raceLength = this.raceText.length();
     }
 
     public int length() {
@@ -40,40 +46,20 @@ public class Race {
         this.racePos = 0;
     }
 
-    public void readFile(String filename) {
-        FileReader file;
-        Scanner fileInput;
-        StringBuilder text = new StringBuilder();
-
-        try {
-            file = new FileReader(filename);
-            fileInput = new Scanner(file);
-
-            while (fileInput.hasNext()) {
-                text.append(fileInput.nextLine());
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        this.raceText = text.toString();
-        this.raceLength = this.raceText.length();
-    }
-
     public boolean next(String input)
     {
         int checkpoint;
         String substr;
 
-        if(this.raceText.substring(racePos).contains(" "))
+        if(this.getRaceText().substring(racePos).contains(" "))
         {
-            checkpoint = this.raceText.indexOf(" ", racePos) + 1;
-            substr = this.raceText.substring(racePos, checkpoint);
+            checkpoint = this.getRaceText().indexOf(" ", racePos) + 1;
+            substr = this.getRaceText().substring(racePos, checkpoint);
         }
         else
         {
             checkpoint = this.raceLength - 1;
-            substr = this.raceText.substring(racePos);
+            substr = this.getRaceText().substring(racePos);
         }
 
         if(this.racePos == checkpoint)
@@ -93,4 +79,6 @@ public class Race {
             return false;
         }
     }
+
+
 }

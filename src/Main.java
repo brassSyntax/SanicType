@@ -6,10 +6,9 @@ import java.awt.event.*;
 
 public class Main {
     public Main() {
-        Race race1 = new Race();
-        race1.readFile("TheDarkKnight.txt");
+        Race race1 = new Race(RaceTextReader.readFile("TheDarkKnight.txt"));
 
-        raceText.setText(race1.getText());
+        raceText.setText(race1.getRaceText());
 
         startButton.addActionListener(new ActionListener() {
             @Override
