@@ -5,18 +5,45 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Main {
+
+    //  TODO: add toolbar for picking/adding races
+    private JPanel contentPane;
+    private JTextPane raceText; // TODO: add formatting for shown text, race position
+    private JTextField playerInput;
+    private JButton startButton;
+    private JButton restartButton;
+    private WpmCounter wpmCounter;
+    private RaceTimer raceTimer;
+
+    private Race currentRace;
+
+    private static final String FILE_NAME = "TheDarkKnights.txt";
+
     public Main() {
-        Race race1 = new Race(RaceTextReader.readFile("TheDarkKnight.txt"));
+        currentRace = new Race(RaceTextReader.readFile(FILE_NAME));
+        raceText.setText(currentRace.getRaceText());
 
-        raceText.setText(race1.getRaceText());
+        setupListeners();
+    }
 
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Sanic Type");
+        frame.setContentPane(new Main().contentPane);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    private void setupListeners() {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!Clock.isRunning()) {
-                    Clock.setLastTick(System.currentTimeMillis());
-	                Counter.reset();
-	                Clock.start();
+                if (!raceTimer.isRunning()) {
+                    wpmCounter.reset();
+
+                    raceTimer.setLastTick(System.currentTimeMillis());
+                    raceTimer.start();
+
                     playerInput.setEditable(true);
                     playerInput.requestFocus();
                 }
@@ -27,65 +54,48 @@ public class Main {
         restartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Clock.restart();
-	            race1.reset();
-                Counter.reset();
+                raceTimer.restart();
+                currentRace.reset();
+                wpmCounter.reset();
+
                 playerInput.setEditable(false);
                 playerInput.setText("");
+
                 startButton.requestFocus();
             }
         });
 
-	    playerInput.addCaretListener(new CaretListener() {
-		    @Override
-		    public void caretUpdate(CaretEvent caretEvent) {
+        playerInput.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent caretEvent) {
 
-			    // using invokeLater because CaretListener or DocumentListener throw mutation in notification exception
-			    // and KeyListener executes before text field is changed
+                // using invokeLater because CaretListener or DocumentListener throw mutation in notification exception
+                // and KeyListener executes before text field is changed
 
-			    SwingUtilities.invokeLater(new Runnable() {
-				    @Override
-				    public void run()
-				    {
-					    if (playerInput.isEditable()) {
-						    if (race1.next(playerInput.getText())) {
-							    Counter.increment();
-							    Counter.count(Clock.getSeconds());
-							    playerInput.setText("");
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (playerInput.isEditable()) {
+                            if (currentRace.next(playerInput.getText())) {
+                                wpmCounter.increment();
+                                wpmCounter.count(raceTimer.getSeconds());
+                                playerInput.setText("");
 
-							    if (race1.isFinished()) {
-								    Clock.stop();
-								    playerInput.setEditable(false);
-								    playerInput.setText("");
-								    race1.reset();
-								    restartButton.requestFocus();
-							    }
-						    }
-					    }
-				    }
-			    });
-		    }
-	    });
+                                if (currentRace.isFinished()) {
+                                    raceTimer.stop();
+                                    playerInput.setEditable(false);
+                                    playerInput.setText("");
+
+                                    currentRace.reset();
+                                    restartButton.requestFocus();
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Sanic Type");
-        frame.setContentPane(new Main().panel1);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
-//  TODO: add toolbar for picking/adding races
-
-    private JPanel panel1;
-    private JTextPane raceText; // TODO: add formatting for shown text, race position
-//	https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
-    private JTextField playerInput;
-    private JButton startButton;
-    private JButton restartButton;
-    private WPMCounter Counter;
-    private RaceTimer Clock;
 
 
     {
@@ -103,35 +113,35 @@ public class Main {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
-        panel1 = new JPanel();
-        panel1.setLayout(new GridBagLayout());
-        panel1.setMinimumSize(new Dimension(406, 200));
-        panel1.setOpaque(false);
-        panel1.setPreferredSize(new Dimension(406, 200));
-        panel1.setBorder(BorderFactory.createTitledBorder(""));
+        contentPane = new JPanel();
+        contentPane.setLayout(new GridBagLayout());
+        contentPane.setMinimumSize(new Dimension(406, 200));
+        contentPane.setOpaque(false);
+        contentPane.setPreferredSize(new Dimension(406, 200));
+        contentPane.setBorder(BorderFactory.createTitledBorder(""));
         startButton = new JButton();
         startButton.setText("Start");
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel1.add(startButton, gbc);
+        contentPane.add(startButton, gbc);
         restartButton = new JButton();
         restartButton.setText("Restart");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 2;
-        panel1.add(restartButton, gbc);
-        Clock = new RaceTimer();
+        contentPane.add(restartButton, gbc);
+        raceTimer = new RaceTimer();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel1.add(Clock, gbc);
-        Counter = new WPMCounter();
+        contentPane.add(raceTimer, gbc);
+        wpmCounter = new WpmCounter();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 1;
-        panel1.add(Counter, gbc);
+        contentPane.add(wpmCounter, gbc);
         playerInput = new JTextField();
         playerInput.setEditable(false);
         playerInput.setText("");
@@ -141,7 +151,7 @@ public class Main {
         gbc.weightx = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel1.add(playerInput, gbc);
+        contentPane.add(playerInput, gbc);
         raceText = new JTextPane();
         raceText.setEditable(false);
         raceText.setEnabled(true);
@@ -151,13 +161,13 @@ public class Main {
         gbc.gridwidth = 3;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        panel1.add(raceText, gbc);
+        contentPane.add(raceText, gbc);
     }
 
     /**
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$() {
-        return panel1;
+        return contentPane;
     }
 }

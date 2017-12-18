@@ -10,12 +10,13 @@ public class RaceTimer extends JLabel {
     private long seconds;
     private JLabel clockLabel;
 
-    public RaceTimer()
-    {
+    private static final int CLOCK_REFRESH_RATE = 20;
+
+    public RaceTimer() {
         clockLabel = this;
         clockLabel.setText(String.format("%01d:%02d.%02d", 0, 0, 0));
 
-        timer = new Timer(20, new ActionListener() {
+        timer = new Timer(CLOCK_REFRESH_RATE, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 long runTime = System.currentTimeMillis() - lastTick;
@@ -24,7 +25,7 @@ public class RaceTimer extends JLabel {
                 long minutes = duration.toMinutes();
                 duration = duration.minusMinutes(minutes);
                 long millis = duration.toMillis();
-                seconds = millis / 1000;
+                seconds = millis / 1000; // seconds are separate because used in WpmCounter
                 millis %= 1000;
 
                 clockLabel.setText(String.format("%01d:%02d.%02d", minutes, seconds, millis));
@@ -32,35 +33,29 @@ public class RaceTimer extends JLabel {
         });
     }
 
-    public int getSeconds()
-    {
-        return (int)this.seconds;
+    public int getSeconds() {
+        return (int) this.seconds;
     }
 
-    public void setLastTick(long time)
-    {
+    public void setLastTick(long time) {
         this.lastTick = time;
     }
 
-    public void start()
-    {
+    public void start() {
         this.timer.start();
     }
 
-    public void stop()
-    {
+    public void stop() {
         this.timer.stop();
     }
 
-    public void restart()
-    {
+    public void restart() {
         this.timer.stop();
         this.seconds = 0;
         clockLabel.setText(String.format("%01d:%02d.%02d", 0, 0, 0));
     }
 
-    public boolean isRunning()
-    {
+    public boolean isRunning() {
         return this.timer.isRunning();
     }
 }
