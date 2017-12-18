@@ -17,10 +17,10 @@ public class Main {
 
     private Race currentRace;
 
-    private static final String FILE_NAME = "TheDarkKnights.txt";
+    private static final String FILE_NAME = "TheDarkKnight.txt";
 
     public Main() {
-        currentRace = new Race(RaceTextReader.readFile(FILE_NAME));
+        currentRace = new Race(RaceTextReader.getInstance().readFile(FILE_NAME));
         raceText.setText(currentRace.getRaceText());
 
         setupListeners();

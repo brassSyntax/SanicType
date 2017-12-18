@@ -4,7 +4,15 @@ import java.util.Scanner;
 
 public class RaceTextReader {
 
-    public static String readFile(String filename) {
+    private static RaceTextReader readerInstance = new RaceTextReader();
+
+    private RaceTextReader() {}
+
+    public static RaceTextReader getInstance(){
+        return readerInstance;
+    }
+
+    public String readFile(String filename) {
         FileReader fr;
         Scanner fileInput;
         StringBuilder text = new StringBuilder();
@@ -23,7 +31,7 @@ public class RaceTextReader {
         return text.toString();
     }
 
-    public static String readFile(File file) {
+    public String readFile(File file) {
         Scanner fileInput;
         StringBuilder text = new StringBuilder();
 

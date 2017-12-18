@@ -11,14 +11,14 @@ public class RaceTextReaderTest {
                 "men in the world, is secretly a vigilante who spends his nights beating criminals to a pulp with " +
                 "his bare hands? And your plan is to blackmail this person?";
 
-        assertEquals(RaceTextReader.readFile("TheDarkKnight.txt"),text);
+        assertEquals(RaceTextReader.getInstance().readFile("TheDarkKnight.txt"),text);
     }
 
     @Test
     public void readFile2() throws Exception {
         String text = "Foo bar.";
 
-        assertEquals(RaceTextReader.readFile("debug.txt"), text);
+        assertEquals(RaceTextReader.getInstance().readFile("debug.txt"), text);
     }
 
     @Test
@@ -28,7 +28,7 @@ public class RaceTextReaderTest {
                 "men in the world, is secretly a vigilante who spends his nights beating criminals to a pulp with " +
                 "his bare hands? And your plan is to blackmail this person?";
 
-        assertEquals(RaceTextReader.readFile(file),text);
+        assertEquals(RaceTextReader.getInstance().readFile(file),text);
     }
 
     @Test
@@ -36,6 +36,6 @@ public class RaceTextReaderTest {
         File file = new File("debug.txt");
         String text = "Foo bar.";
 
-        assertEquals(RaceTextReader.readFile(file), text);
+        assertEquals(RaceTextReader.getInstance().readFile(file), text);
     }
 }
